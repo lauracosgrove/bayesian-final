@@ -3,7 +3,7 @@ Simulation
 Laura Cosgrove
 11/27/2019
 
-# Examine operating characteristics of Araujo et al. simulation
+# Recreate Araujo et al. simulation
 
 \(Y_{irs} = \lambda_i + \beta_{ir} + \epsilon_{irs} + Z_{irs}\tau_i\)
 
@@ -214,13 +214,25 @@ rand_df <- rand_df %>%
 
 ``` r
 rand_df %>% 
-  group_by(id, rand, tau) %>% 
+  group_by(id, rand) %>% 
   summarize(Y_bar = mean(Y)) %>% 
   ungroup() %>% 
   pivot_wider(names_from = rand, values_from = Y_bar) %>% 
-  group_by(id, tau) %>% 
+  group_by(id) %>% 
   summarize(ITE = A - B) %>% 
-  ggplot(aes(x = tau, y = ITE)) + geom_point()
+  mutate(ATE = mean(ITE))  %>% 
+  ggplot(aes(x = ITE)) + geom_histogram() + geom_vline(aes(xintercept = ATE, slope = 0), color = "red") + ggthemes::theme_few() + labs(title = "Distribution of ITE, with ATE plotted in red")
 ```
 
+    ## Warning: Ignoring unknown aesthetics: slope
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
 ![](sim_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+122 subjects x 4 cycles seems clearly enough to detect the true ATE
+under the chosen conditions. Now, let’s examine the operating
+characteristics more formally based on our analysis plan (a mixed
+effects model).
+
+# Analyze simulated dataset
