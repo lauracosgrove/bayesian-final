@@ -2,7 +2,7 @@
 title: "Simulation"
 author: "Laura Cosgrove"
 date: "11/27/2019"
-output: html_document
+output: github_document
 ---
 
 # Recreate Araujo et al. simulation
@@ -332,7 +332,7 @@ sim_mod %>%
 
 ```{r}
 sim_mod %>% 
-  ggplot(aes(x = hte_est)) + geom_density()+ geom_point(aes(y = 0, x = hte_est, alpha = 1 - pass1)) + 
+  ggplot(aes(x = hte_est)) + geom_density()+ geom_point(aes(y = 0, x = hte_est, alpha = rej_sharp_null)) + 
   ggthemes::theme_few()
 
 ```
@@ -435,7 +435,6 @@ sim_ma <- sim_df %>%
   mutate(hte_mse = sqrt((hte_est - psi)^2) ) %>% 
   mutate(ate_mse =  sqrt((T_est - T)^2))
 
-View(sim_ma)
 
 summary_ma = sim_ma %>% 
   summarize(Power_SharpNull = mean(rej_sharp_null, na.rm = TRUE),
